@@ -7,10 +7,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - staging.cosy-hosting.net
+        - staging.domain-provider.cosy-hosting.net
       secretName: staging-tls
   rules:
-    - host: staging.cosy-hosting.net
+    - host: staging.domain-provider.cosy-hosting.net
       http:
         paths:
           - path: /api
