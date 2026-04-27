@@ -10,6 +10,8 @@ Never commit secret values to this repository.
 ```bash
 kubectl create secret generic backend-secrets \
   --namespace=cosy-staging \
+  --from-literal=AWS_ACCESS_KEY_ID=... \
+  --from-literal=AWS_SECRET_ACCESS_KEY=... \
   --from-literal=AWS_HOSTED_ZONE_ID=... \
   --from-literal=AWS_DOMAIN=... \
   --from-literal=MAIL_API_URL=... \
@@ -20,10 +22,13 @@ kubectl create secret generic backend-secrets \
   --from-literal=STRIPE_PRICE_ID=... \
   --from-literal=OAUTH_GOOGLE_CLIENT_ID=... \
   --from-literal=OAUTH_GOOGLE_CLIENT_SECRET=... \
+  --from-literal=OAUTH_GOOGLE_CALLBACK_URI=https://staging.cosy-hosting.net/api/v1/auth/oauth/google/callback \
   --from-literal=OAUTH_GITHUB_CLIENT_ID=... \
   --from-literal=OAUTH_GITHUB_CLIENT_SECRET=... \
+  --from-literal=OAUTH_GITHUB_CALLBACK_URI=https://staging.cosy-hosting.net/api/v1/auth/oauth/github/callback \
   --from-literal=OAUTH_DISCORD_CLIENT_ID=... \
   --from-literal=OAUTH_DISCORD_CLIENT_SECRET=... \
+  --from-literal=OAUTH_DISCORD_CALLBACK_URI=https://staging.cosy-hosting.net/api/v1/auth/oauth/discord/callback \
   --from-literal=OAUTH_SECURE_COOKIE=false \
   --from-literal=COSY_DOMAIN_PROVIDER_JWT_SECRET_KEY=... \
   --from-literal=ADMIN_SECRET_KEY=... \
