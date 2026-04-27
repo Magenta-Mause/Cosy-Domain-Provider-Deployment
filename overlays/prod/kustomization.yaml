@@ -2,10 +2,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: cosy-prod
 resources:
-  - ../../base
-  - ingress.yaml
+- ../../base
+- ingress.yaml
 images:
-  - name: ghcr.io/magenta-mause/cosy-domain-provider-backend
-    newTag: prod-placeholder
-  - name: ghcr.io/magenta-mause/cosy-domain-provider-frontend
-    newTag: prod-placeholder
+- name: ghcr.io/magenta-mause/cosy-domain-provider-backend
+  newTag: prod-placeholder
+- name: ghcr.io/magenta-mause/cosy-domain-provider-frontend
+  newTag: v0.0.1
