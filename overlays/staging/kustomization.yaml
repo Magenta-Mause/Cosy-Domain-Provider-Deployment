@@ -2,10 +2,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: cosy-staging
 resources:
-  - ../../base
-  - ingress.yaml
+- ../../base
+- ingress.yaml
 images:
-  - name: ghcr.io/magenta-mause/cosy-domain-provider-backend
-    newTag: main-placeholder
-  - name: ghcr.io/magenta-mause/cosy-domain-provider-frontend
-    newTag: staging-placeholder
+- name: ghcr.io/magenta-mause/cosy-domain-provider-backend
+  newTag: main-4dd4390
+- name: ghcr.io/magenta-mause/cosy-domain-provider-frontend
+  newTag: staging-placeholder
