@@ -2,23 +2,6 @@
 
 Kubernetes manifests for the Cosy Domain Provider, managed via [Kustomize](https://kustomize.io/) and deployed with [ArgoCD](https://argo-cd.readthedocs.io/).
 
-## Repository structure
-
-```
-base/                  # Shared manifests (Deployments, Services, StatefulSet)
-  backend/
-  frontend/
-  postgres/
-overlays/
-  staging/             # Staging-specific patches and image tags
-  prod/                # Production-specific patches and image tags
-argocd/
-  staging-app.yaml     # ArgoCD Application for staging
-  prod-app.yaml        # ArgoCD Application for prod
-docs/
-  secrets-required.md  # All required Kubernetes secrets (no values — apply manually)
-```
-
 ## How it works
 
 Images are built and pushed to `ghcr.io` by CI in the Backend and Frontend repos. CI then updates the image tags in the relevant `overlays/*/kustomization.yaml` and pushes to this repo. ArgoCD detects the change and syncs the cluster automatically.
