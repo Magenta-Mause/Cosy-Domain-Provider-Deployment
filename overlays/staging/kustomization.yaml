@@ -4,6 +4,16 @@ namespace: cosy-staging
 resources:
 - ../../base
 - ingress.yaml
+patches:
+  - target:
+      kind: Deployment
+      name: backend
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/env
+        value:
+          - name: STAGING_CAPTCHA_BYPASS_ENABLED
+            value: "true"
 images:
 - name: ghcr.io/magenta-mause/cosy-domain-provider-backend
   newTag: main-6c8a528
