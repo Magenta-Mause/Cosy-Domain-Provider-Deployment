@@ -5,6 +5,13 @@ resources:
 - ../../base
 - ingress.yaml
 - servicemonitor.yaml
+patches:
+- patch: |-
+    - op: replace
+      path: /metadata/namespace
+      value: monitoring
+  target:
+    kind: ServiceMonitor
 images:
 - name: ghcr.io/magenta-mause/cosy-domain-provider-backend
   newTag: 0.0.3
