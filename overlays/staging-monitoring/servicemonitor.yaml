@@ -4,7 +4,7 @@ metadata:
   name: cosy-domain-provider-backend-staging
   namespace: default
   labels:
-    release: kube-prometheus-stack
+    release: prometheus
 spec:
   namespaceSelector:
     matchNames:
