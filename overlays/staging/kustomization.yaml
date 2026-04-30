@@ -4,10 +4,8 @@ namespace: cosy-staging
 resources:
 - ../../base
 - ingress.yaml
-patchesStrategicMerge:
-- backend-patch.yaml
 images:
 - name: ghcr.io/magenta-mause/cosy-domain-provider-backend
-  newTag: main-62ae808
+  newTag: main-64c57a5
 - name: ghcr.io/magenta-mause/cosy-domain-provider-frontend
   newTag: staging-f83cf50
