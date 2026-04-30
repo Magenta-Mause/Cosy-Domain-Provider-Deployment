@@ -4,7 +4,6 @@ namespace: cosy-staging
 resources:
 - ../../base
 - ingress.yaml
-- servicemonitor.yaml
 patches:
 - patch: |-
     - op: add
@@ -15,12 +14,6 @@ patches:
   target:
     kind: Deployment
     name: backend
-- patch: |-
-    - op: replace
-      path: /metadata/namespace
-      value: monitoring
-  target:
-    kind: ServiceMonitor
 images:
 - name: ghcr.io/magenta-mause/cosy-domain-provider-backend
   newTag: main-a2090ca
