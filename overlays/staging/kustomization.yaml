@@ -4,6 +4,7 @@ namespace: cosy-staging
 resources:
 - ../../base
 - ingress.yaml
+- servicemonitor.yaml
 patches:
 - patch: |-
     - op: add

@@ -4,6 +4,7 @@ namespace: cosy-prod
 resources:
 - ../../base
 - ingress.yaml
+- servicemonitor.yaml
 images:
 - name: ghcr.io/magenta-mause/cosy-domain-provider-backend
   newTag: 0.0.3
