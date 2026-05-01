@@ -6,6 +6,6 @@ resources:
 - ingress.yaml
 images:
 - name: ghcr.io/magenta-mause/cosy-domain-provider-backend
-  newTag: 0.0.4
+  newTag: 1.0.0
 - name: ghcr.io/magenta-mause/cosy-domain-provider-frontend
   newTag: 1.0.0
