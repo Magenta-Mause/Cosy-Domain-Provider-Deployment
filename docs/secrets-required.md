@@ -33,6 +33,8 @@ kubectl create secret generic backend-secrets \
   --from-literal=COSY_DOMAIN_PROVIDER_JWT_SECRET_KEY=... \
   --from-literal=ADMIN_SECRET_KEY=... \
   --from-literal=TURNSTILE_SECRET_KEY=... \
+  --from-literal=STAGING_AUTH_USERNAME=... \
+  --from-literal=STAGING_AUTH_PASSWORD=... \
   --from-literal=FRONTEND_URL=https://staging.cosy-hosting.net \
   --from-literal=SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/cosy \
   --from-literal=SPRING_DATASOURCE_USERNAME=cosy \
