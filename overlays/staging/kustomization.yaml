@@ -16,6 +16,6 @@ patches:
     name: backend
 images:
 - name: ghcr.io/magenta-mause/cosy-domain-provider-backend
-  newTag: main-5d70cdc
+  newTag: main-b71adaa
 - name: ghcr.io/magenta-mause/cosy-domain-provider-frontend
   newTag: staging-a6294a2
