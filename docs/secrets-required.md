@@ -29,7 +29,6 @@ kubectl create secret generic backend-secrets \
   --from-literal=OAUTH_DISCORD_CLIENT_ID=... \
   --from-literal=OAUTH_DISCORD_CLIENT_SECRET=... \
   --from-literal=OAUTH_DISCORD_CALLBACK_URI=https://staging.cosy-hosting.net/api/v1/auth/oauth/discord/callback \
-  --from-literal=OAUTH_SECURE_COOKIE=false \
   --from-literal=COSY_DOMAIN_PROVIDER_JWT_SECRET_KEY=... \
   --from-literal=ADMIN_SECRET_KEY=... \
   --from-literal=TURNSTILE_SECRET_KEY=... \
@@ -41,7 +40,11 @@ kubectl create secret generic backend-secrets \
   --from-literal=SPRING_DATASOURCE_PASSWORD=...
 ```
 
-For prod: set `OAUTH_SECURE_COOKIE=true` and `FRONTEND_URL=https://cosy-hosting.net`.
+For prod: set `FRONTEND_URL=https://cosy-hosting.net`.
+
+Auth cookies are `Secure` by default. `AUTH_COOKIE_SECURE=false` (or the legacy
+`OAUTH_SECURE_COOKIE=false`) can override this, but should never be set in staging or prod —
+both are served over HTTPS.
 
 ### `postgres-secrets`
 
