@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pushgateway
+  namespace: monitoring
+  labels:
+    app: pushgateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pushgateway
+  template:
+    metadata:
+      labels:
+        app: pushgateway
+    spec:
+      containers:
+        - name: pushgateway
+          image: prom/pushgateway:v1.11.1
+          args:
+            # In-Memory + Snapshot auf Disk, damit ein Pod-Restart den letzten Push
+            # (inkl. last_run_timestamp) nicht verliert und kein Fehlalarm entsteht.
+            - --persistence.file=/data/pushgateway.store
+            - --persistence.interval=5m
+          ports:
+            - name: http
+              containerPort: 9091
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "32Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+          livenessProbe:
+            httpGet:
+              path: /-/healthy
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /-/ready
+              port: http
+      volumes:
+        # emptyDir reicht für Pod-Restarts. Soll der Stand auch ein Rescheduling
+        # überleben, hier eine PVC einhängen.
+        - name: data
+          emptyDir: {}

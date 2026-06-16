@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: pushgateway
+  namespace: monitoring
+  labels:
+    # Wird vom kube-prometheus-stack über diesen Label selektiert (wie beim Backend).
+    release: prometheus
+spec:
+  namespaceSelector:
+    matchNames:
+      - monitoring
+  selector:
+    matchLabels:
+      app: pushgateway
+  endpoints:
+    - port: http
+      interval: 30s
+      # WICHTIG: behält die im Push gesetzten Labels (job="cosy-systemtest", suite=...)
+      # statt sie durch die Scrape-Target-Labels zu überschreiben.
+      honorLabels: true

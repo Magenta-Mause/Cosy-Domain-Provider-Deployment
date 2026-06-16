@@ -66,6 +66,27 @@ kubectl create secret docker-registry ghcr-pull-secret \
   --docker-password=<github-pat-with-read:packages>
 ```
 
+## namespace: monitoring
+
+### `pushgateway-basic-auth` (für den Systemtest-Pushgateway)
+
+Schützt den `pushgateway.jannekeipert.de`-Ingress per Basic-Auth, damit nur der
+Systemtest-CronJob Metriken pushen kann. Erwartet ein htpasswd-File unter dem
+Key `auth`:
+
+```bash
+# htpasswd erzeugen (User + Passwort frei wählbar — müssen mit
+# PUSHGATEWAY_USERNAME/PASSWORD im cosy-systemtest-secrets übereinstimmen):
+htpasswd -nbB cosy-systemtest '<starkes-passwort>' > auth
+
+kubectl create secret generic pushgateway-basic-auth \
+  --namespace=monitoring \
+  --from-file=auth
+rm auth
+```
+
+Das `pushgateway-tls`-Secret legt cert-manager (`letsencrypt-prod`) automatisch an.
+
 ## GitHub Actions secrets (set in each app repo)
 
 | Secret | Description |
