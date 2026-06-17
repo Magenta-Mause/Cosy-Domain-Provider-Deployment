@@ -4,10 +4,10 @@ metadata:
   name: pushgateway
   namespace: monitoring
   labels:
-    # Vom kube-prometheus-stack ueber dieses Label selektiert. Muss zum Helm-
-    # Release-Namen passen — in Janne's Cluster `kube-prometheus-stack` (wie der
-    # funktionierende Backend-SM cosy-domain-provider-backend-staging in ns monitoring).
-    release: kube-prometheus-stack
+    # Muss zum serviceMonitorSelector der Prometheus-CR passen. In Janne's Cluster
+    # selektiert default/prometheus-kube-prometheus-prometheus auf release=prometheus
+    # (verifiziert via .spec.serviceMonitorSelector).
+    release: prometheus
 spec:
   namespaceSelector:
     matchNames:
