@@ -70,19 +70,21 @@ kubectl create secret docker-registry ghcr-pull-secret \
 
 ### `pushgateway-basic-auth` (für den Systemtest-Pushgateway)
 
-Schützt den `pushgateway.jannekeipert.de`-Ingress per Basic-Auth, damit nur der
-Systemtest-CronJob Metriken pushen kann. Erwartet ein htpasswd-File unter dem
-Key `auth`:
+Schützt den `pushgateway.jannekeipert.de`-Ingress per Basic-Auth (Traefik-Middleware
+`pushgateway-auth`, siehe `base/pushgateway/middleware.yaml`), damit nur der
+Systemtest-CronJob Metriken pushen kann. Die Traefik-`basicAuth`-Middleware liest
+das htpasswd aus dem Secret-Key **`users`** (NICHT `auth` — das ist die
+nginx-Konvention):
 
 ```bash
 # htpasswd erzeugen (User + Passwort frei wählbar — müssen mit
 # PUSHGATEWAY_USERNAME/PASSWORD im cosy-systemtest-secrets übereinstimmen):
-htpasswd -nbB cosy-systemtest '<starkes-passwort>' > auth
+htpasswd -nbB cosy-systemtest '<starkes-passwort>' > users
 
 kubectl create secret generic pushgateway-basic-auth \
   --namespace=monitoring \
-  --from-file=auth
-rm auth
+  --from-file=users
+rm users
 ```
 
 Das `pushgateway-tls`-Secret legt cert-manager (`letsencrypt-prod`) automatisch an.

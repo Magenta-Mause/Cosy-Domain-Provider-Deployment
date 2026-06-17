@@ -5,12 +5,12 @@ metadata:
   namespace: monitoring
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    # Basic-Auth, damit nur der Systemtest-CronJob pushen kann. Das Secret
-    # "pushgateway-basic-auth" (htpasswd) muss manuell angelegt werden — siehe
+    # Basic-Auth (Traefik), damit nur der Systemtest-CronJob pushen kann.
+    # Referenziert die Middleware "pushgateway-auth" (siehe middleware.yaml);
+    # Format: <namespace>-<middleware-name>@kubernetescrd. Das htpasswd-Secret
+    # "pushgateway-basic-auth" (Key: users) muss manuell angelegt werden — siehe
     # docs/secrets-required.md.
-    nginx.ingress.kubernetes.io/auth-type: basic
-    nginx.ingress.kubernetes.io/auth-secret: pushgateway-basic-auth
-    nginx.ingress.kubernetes.io/auth-realm: "Pushgateway - Authentication Required"
+    traefik.ingress.kubernetes.io/router.middlewares: monitoring-pushgateway-auth@kubernetescrd
 spec:
   tls:
     - hosts:

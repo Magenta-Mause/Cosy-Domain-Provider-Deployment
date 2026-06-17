@@ -1,0 +1,13 @@
+# Traefik-natives Basic-Auth fuer den Pushgateway-Ingress. Wird per
+# Router-Annotation am Ingress referenziert (monitoring-pushgateway-auth@kubernetescrd).
+# Traefik liest das htpasswd aus dem Secret-Key `users` (NICHT `auth`!).
+# k3s ab Traefik v3 -> apiGroup traefik.io. Bei aelterem Traefik v2 stattdessen
+# traefik.containo.us/v1alpha1 verwenden.
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: pushgateway-auth
+  namespace: monitoring
+spec:
+  basicAuth:
+    secret: pushgateway-basic-auth
