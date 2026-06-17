@@ -2,7 +2,12 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: pushgateway
-  namespace: monitoring
+  # WICHTIG: Der ServiceMonitor liegt bewusst in `default`, NICHT in `monitoring`.
+  # Die Prometheus-Instanz/der Operator in Janne's Cluster greift nur SMs aus
+  # `default` auf (dort liegen alle funktionierenden SMs: backend, mail-service,
+  # covered). Der Pushgateway-Service in `monitoring` wird via
+  # spec.namespaceSelector erreicht.
+  namespace: default
   labels:
     # Muss zum serviceMonitorSelector der Prometheus-CR passen. In Janne's Cluster
     # selektiert default/prometheus-kube-prometheus-prometheus auf release=prometheus

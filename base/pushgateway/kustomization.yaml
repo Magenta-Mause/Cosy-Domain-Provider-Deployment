@@ -1,6 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: monitoring
+# Kein Blanket-`namespace:`: die Workload (deployment/service/ingress/middleware)
+# traegt explizit `namespace: monitoring`, der ServiceMonitor liegt bewusst in
+# `default` (siehe servicemonitor.yaml). Ein Blanket-Namespace wuerde den SM
+# faelschlich nach monitoring zwingen.
 resources:
   - deployment.yaml
   - service.yaml
