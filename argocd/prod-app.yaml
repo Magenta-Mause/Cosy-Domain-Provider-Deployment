@@ -2,11 +2,13 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: cosy-prod
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
   namespace: argocd
 spec:
-  project: default
+  project: cosy-domain-provider
   source:
-    repoURL: https://github.com/magenta-mause/cosy-domain-provider-deployment.git
+    repoURL: https://github.com/Magenta-Mause/Cosy-Domain-Provider-Deployment
     targetRevision: main
     path: overlays/prod
   destination:

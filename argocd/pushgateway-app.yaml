@@ -2,11 +2,13 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: cosy-pushgateway
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
   namespace: argocd
 spec:
-  project: default
+  project: cosy-domain-provider
   source:
-    repoURL: https://github.com/Magenta-Mause/Cosy-Domain-Provider-Deployment.git
+    repoURL: https://github.com/Magenta-Mause/Cosy-Domain-Provider-Deployment
     targetRevision: main
     path: base/pushgateway
   destination:
