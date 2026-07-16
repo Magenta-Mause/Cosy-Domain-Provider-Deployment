@@ -1,0 +1,26 @@
+name: Trigger Systemtests
+
+# Nach jedem Deploy-Push die Staging-Smoke-Suite im Systemtest-Repo starten.
+# wait_minutes=5 gibt Argo Zeit, die Pods zu syncen, bevor getestet wird.
+# Braucht das Secret SYSTEMTEST_DISPATCH_TOKEN: fine-grained PAT mit
+# Actions: Read & Write auf Magenta-Mause/Cosy-Domain-Provider-Systemtest.
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+  workflow_dispatch:
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Staging-Smoke im Systemtest-Repo starten
+        env:
+          GH_TOKEN: ${{ secrets.SYSTEMTEST_DISPATCH_TOKEN }}
+        run: |
+          gh workflow run staging-smoke.yml \
+            -R Magenta-Mause/Cosy-Domain-Provider-Systemtest \
+            -f wait_minutes=5 \
+            -f reason="deploy ${GITHUB_SHA::7}"
