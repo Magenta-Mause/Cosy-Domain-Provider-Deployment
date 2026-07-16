@@ -1,9 +1,11 @@
 name: Trigger Systemtests
 
-# Nach jedem Deploy-Push die Staging-Smoke-Suite im Systemtest-Repo starten.
-# wait_minutes=5 gibt Argo Zeit, die Pods zu syncen, bevor getestet wird.
-# Braucht das Secret SYSTEMTEST_DISPATCH_TOKEN: fine-grained PAT mit
-# Actions: Read & Write auf Magenta-Mause/Cosy-Domain-Provider-Systemtest.
+# Pusht per SSH-Deploy-Key einen leeren Commit (auf Basis von main) auf den
+# Branch `staging-deploy-trigger` im Systemtest-Repo — das startet dort die
+# Staging-Smoke-Suite, die 5 Min auf den Argo-Sync wartet. Deploy-Keys können
+# keine Workflows dispatchen, Pushes triggern sie aber.
+# Secret SYSTEMTEST_DEPLOY_KEY = privater Teil des Write-Deploy-Keys auf
+# Magenta-Mause/Cosy-Domain-Provider-Systemtest.
 on:
   push:
     branches: [main]
@@ -13,14 +15,20 @@ on:
   workflow_dispatch:
 
 jobs:
-  dispatch:
+  trigger:
     runs-on: ubuntu-latest
     steps:
-      - name: Staging-Smoke im Systemtest-Repo starten
+      - name: Trigger-Commit ins Systemtest-Repo pushen
         env:
-          GH_TOKEN: ${{ secrets.SYSTEMTEST_DISPATCH_TOKEN }}
+          DEPLOY_KEY: ${{ secrets.SYSTEMTEST_DEPLOY_KEY }}
         run: |
-          gh workflow run staging-smoke.yml \
-            -R Magenta-Mause/Cosy-Domain-Provider-Systemtest \
-            -f wait_minutes=5 \
-            -f reason="deploy ${GITHUB_SHA::7}"
+          mkdir -p ~/.ssh
+          printf '%s\n' "$DEPLOY_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan github.com >> ~/.ssh/known_hosts 2>/dev/null
+          git clone --depth 1 git@github.com:Magenta-Mause/Cosy-Domain-Provider-Systemtest.git systemtest
+          cd systemtest
+          git config user.name "cosy-deploy-trigger"
+          git config user.email "deploy-trigger@users.noreply.github.com"
+          git commit --allow-empty -m "deploy ${GITHUB_SHA::7}"
+          git push --force origin HEAD:staging-deploy-trigger
