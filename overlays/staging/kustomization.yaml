@@ -18,4 +18,4 @@ images:
 - name: ghcr.io/magenta-mause/cosy-domain-provider-backend
   newTag: main-7716a7c
 - name: ghcr.io/magenta-mause/cosy-domain-provider-frontend
-  newTag: staging-c748e40
+  newTag: staging-e251b1e
