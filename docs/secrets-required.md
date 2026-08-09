@@ -63,10 +63,19 @@ dashboard, so it needs the **reader** half of the Watchtower bucket credentials.
 Add these to the `backend-secrets` command above:
 
 ```bash
-  --from-literal=WATCHTOWER_S3_ENDPOINT=http://minio.minio.svc.cluster.local:9000 \
+  --from-literal=WATCHTOWER_S3_ENDPOINT=https://minio-cli.jannekeipert.de \
   --from-literal=WATCHTOWER_S3_ACCESS_KEY=cosy-watchtower-reader \
   --from-literal=WATCHTOWER_S3_SECRET_KEY=...
 ```
+
+The endpoint here must be the **browser-reachable** one, not the in-cluster Service
+address the CronJob uses. A presigned URL's SigV4 signature covers the host, so one
+signed for `minio.minio.svc.cluster.local` cannot be rewritten client-side — the
+dashboard just shows broken images. The backend never uploads and never calls MinIO
+itself, so it has no reason to prefer the internal address.
+
+Note that `minio.jannekeipert.de` is the **console**; the S3 API is served at
+`minio-cli.jannekeipert.de`.
 
 Leaving `WATCHTOWER_S3_ENDPOINT` unset is a supported state, not a broken one: the
 Watchtower tab keeps working and simply renders scans without screenshots.
