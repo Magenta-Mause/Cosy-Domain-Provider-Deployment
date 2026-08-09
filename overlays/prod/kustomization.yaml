@@ -4,6 +4,22 @@ namespace: cosy-prod
 resources:
 - ../../base
 - ingress.yaml
+# Suspended until prod runs a backend image that has the Watchtower endpoints.
+# Prod is pinned to backend 1.0.4, which predates them, so an unsuspended CronJob
+# would wake at 03:12, scan every subdomain, and then 404 on every ingest — paying
+# for the model calls and throwing the results away.
+#
+# TO ENABLE: cut a backend release containing the Watchtower API, bump newTag
+# below, and delete this patch. Nothing else is needed — the secrets, the MinIO
+# bucket and the scanner image are all in place.
+patches:
+- patch: |-
+    - op: add
+      path: /spec/suspend
+      value: true
+  target:
+    kind: CronJob
+    name: watchtower
 images:
 - name: ghcr.io/magenta-mause/cosy-domain-provider-backend
   newTag: 1.0.4
