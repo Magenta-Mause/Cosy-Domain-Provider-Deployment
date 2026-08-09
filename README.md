@@ -28,3 +28,4 @@ ArgoCD will create the namespaces and deploy everything automatically.
 | [Cosy-Domain-Provider-Backend](https://github.com/Magenta-Mause/Cosy-Domain-Provider-Backend) | Spring Boot backend — builds and pushes the backend image |
 | [Cosy-Domain-Provider-Frontend](https://github.com/Magenta-Mause/Cosy-Domain-Provider-Frontend) | React + Vite frontend — builds and pushes the frontend image |
 | [Cosy-Domain-Provider-Systemtest](https://github.com/Magenta-Mause/Cosy-Domain-Provider-Systemtest) | Playwright end-to-end tests |
+| [Cosy-Domain-Provider-Watchtower](https://github.com/Magenta-Mause/Cosy-Domain-Provider-Watchtower) | Nightly AI reputation scanner — runs as the `watchtower` CronJob |

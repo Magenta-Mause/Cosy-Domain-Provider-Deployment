@@ -56,6 +56,47 @@ kubectl create secret generic postgres-secrets \
 
 The `SPRING_DATASOURCE_PASSWORD` in `backend-secrets` must match this value.
 
+### Watchtower keys inside `backend-secrets`
+
+The backend turns MinIO object keys into presigned screenshot URLs for the admin
+dashboard, so it needs the **reader** half of the Watchtower bucket credentials.
+Add these to the `backend-secrets` command above:
+
+```bash
+  --from-literal=WATCHTOWER_S3_ENDPOINT=http://minio.minio.svc.cluster.local:9000 \
+  --from-literal=WATCHTOWER_S3_ACCESS_KEY=cosy-watchtower-reader \
+  --from-literal=WATCHTOWER_S3_SECRET_KEY=...
+```
+
+Leaving `WATCHTOWER_S3_ENDPOINT` unset is a supported state, not a broken one: the
+Watchtower tab keeps working and simply renders scans without screenshots.
+
+### `watchtower-secrets`
+
+Credentials for the nightly scanner CronJob. The **writer** half of the bucket
+credentials, plus the admin key it uses to read subdomains and post verdicts:
+
+```bash
+kubectl create secret generic watchtower-secrets \
+  --namespace=cosy-prod \
+  --from-literal=COSY_ADMIN_KEY=... \
+  --from-literal=WATCHTOWER_S3_ACCESS_KEY=cosy-watchtower-scanner \
+  --from-literal=WATCHTOWER_S3_SECRET_KEY=... \
+  --from-literal=ANTHROPIC_API_KEY=...
+```
+
+`COSY_ADMIN_KEY` must match `ADMIN_SECRET_KEY` in `backend-secrets`.
+
+Instead of `ANTHROPIC_API_KEY` the scanner also accepts `CLAUDE_CODE_OAUTH_TOKEN`
+(from `claude setup-token`), which authenticates against a personal Claude
+subscription. That is fine for trying the pipeline out, but it is a personal
+credential: the nightly run draws on that account's limits and the job dies
+silently once the token is revoked or expires. Production should use an API key.
+
+The MinIO-side users, policies and the bucket itself live in the cluster repo's
+`infrastructure/minio.yaml`; the two secret **values** are generated once and
+sealed there (see its `BOOTSTRAP.md`).
+
 ### `ghcr-pull-secret` (only needed if the ghcr.io packages are private)
 
 ```bash
