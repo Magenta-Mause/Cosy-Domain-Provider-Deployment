@@ -1,0 +1,52 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: watchtower
+spec:
+  # 03:12 UTC — off the hour so it does not collide with every other cron in the
+  # cluster, and late enough that the nightly systemtest has finished using MinIO.
+  schedule: "12 3 * * *"
+  timeZone: Etc/UTC
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  # A run that has not finished in two hours is stuck, not slow: the scanner has
+  # per-navigation timeouts and a page budget, so the only way to reach this is a
+  # hang. Kill it rather than let it block the next night via Forbid.
+  startingDeadlineSeconds: 3600
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 7200
+      template:
+        spec:
+          restartPolicy: Never
+          imagePullSecrets:
+            - name: ghcr-pull-secret
+          containers:
+            - name: watchtower
+              image: ghcr.io/magenta-mause/cosy-domain-provider-watchtower:placeholder
+              envFrom:
+                - secretRef:
+                    name: watchtower-secrets
+              env:
+                - name: COSY_ADMIN_API_URL
+                  value: http://backend:8080
+                - name: WATCHTOWER_S3_ENDPOINT
+                  value: http://minio.minio.svc.cluster.local:9000
+                - name: WATCHTOWER_S3_BUCKET
+                  value: cosy-watchtower-screenshots
+              resources:
+                requests:
+                  cpu: 250m
+                  memory: 512Mi
+                limits:
+                  # Chromium is the memory consumer here; three contexts in
+                  # parallel (WATCHTOWER_CONCURRENCY) fit comfortably in 2Gi.
+                  memory: 2Gi
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: false
+                capabilities:
+                  drop:
+                    - ALL

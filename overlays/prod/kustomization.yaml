@@ -9,3 +9,5 @@ images:
   newTag: 1.0.4
 - name: ghcr.io/magenta-mause/cosy-domain-provider-frontend
   newTag: 1.0.8
+- name: ghcr.io/magenta-mause/cosy-domain-provider-watchtower
+  newTag: v0.1.1
