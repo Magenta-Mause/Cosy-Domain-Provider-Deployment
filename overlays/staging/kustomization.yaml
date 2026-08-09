@@ -27,7 +27,7 @@ patches:
     name: watchtower
 images:
 - name: ghcr.io/magenta-mause/cosy-domain-provider-backend
-  newTag: main-7716a7c
+  newTag: main-7e85ad8
 - name: ghcr.io/magenta-mause/cosy-domain-provider-frontend
   newTag: staging-4a4c97b
 - name: ghcr.io/magenta-mause/cosy-domain-provider-watchtower
