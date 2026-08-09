@@ -4,6 +4,10 @@ namespace: cosy-staging
 resources:
 - ../../base
 - ingress.yaml
+# Staging holds throwaway subdomains that point nowhere, so a nightly scan there
+# would spend model tokens to produce a wall of UNREACHABLE. The CronJob is kept
+# in the overlay (so manifest drift is still caught) but never fires on its own —
+# `kubectl create job --from=cronjob/watchtower` for a manual smoke test.
 patches:
 - patch: |-
     - op: add
@@ -14,10 +18,6 @@ patches:
   target:
     kind: Deployment
     name: backend
-# Staging holds throwaway subdomains that point nowhere, so a nightly scan there
-# would spend model tokens to produce a wall of UNREACHABLE. The CronJob is kept
-# in the overlay (so manifest drift is still caught) but never fires on its own —
-# `kubectl create job --from=cronjob/watchtower` for a manual smoke test.
 - patch: |-
     - op: add
       path: /spec/suspend
@@ -29,6 +29,6 @@ images:
 - name: ghcr.io/magenta-mause/cosy-domain-provider-backend
   newTag: main-7716a7c
 - name: ghcr.io/magenta-mause/cosy-domain-provider-frontend
-  newTag: staging-e251b1e
+  newTag: staging-4a4c97b
 - name: ghcr.io/magenta-mause/cosy-domain-provider-watchtower
   newTag: staging-latest
