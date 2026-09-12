@@ -23,6 +23,13 @@ spec:
   endpoints:
     - port: http
       interval: 30s
-      # WICHTIG: behält die im Push gesetzten Labels (job="cosy-systemtest", suite=...)
-      # statt sie durch die Scrape-Target-Labels zu überschreiben.
-      honorLabels: true
+      # WICHTIG: honorLabels muss false sein. Gescraped wird inzwischen von Grafana Alloy
+      # (Grafana Cloud), nicht mehr vom In-Cluster-Prometheus, und Alloys
+      # OpenTelemetry-Pipeline verwirft jede Serie, deren job/instance nicht zum
+      # Scrape-Target passt: mit honorLabels: true kamen job="cosy-systemtest" und ein
+      # leeres instance="" durch, Alloy loggte bei jedem Scrape "Failed to scrape
+      # Prometheus endpoint", und in Grafana Cloud stand up=0 bei null Systemtest-Serien.
+      # Mit false bleiben alle Push-Labels erhalten, nur job/instance heißen dann
+      # exported_job/exported_instance. In Grafana: job="monitoring/pushgateway",
+      # exported_job="cosy-systemtest".
+      honorLabels: false
