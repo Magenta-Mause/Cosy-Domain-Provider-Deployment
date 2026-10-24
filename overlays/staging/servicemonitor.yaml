@@ -15,5 +15,5 @@ spec:
   endpoints:
     - port: management
       path: /actuator/prometheus
-      interval: 30s
+      interval: 60s
       scrapeTimeout: 10s

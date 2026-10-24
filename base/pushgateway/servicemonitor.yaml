@@ -22,7 +22,7 @@ spec:
       app: pushgateway
   endpoints:
     - port: http
-      interval: 30s
+      interval: 60s
       # WICHTIG: honorLabels muss false sein. Gescraped wird inzwischen von Grafana Alloy
       # (Grafana Cloud), nicht mehr vom In-Cluster-Prometheus, und Alloys
       # OpenTelemetry-Pipeline verwirft jede Serie, deren job/instance nicht zum
